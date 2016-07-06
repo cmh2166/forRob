@@ -20,8 +20,10 @@ Value additions:
 
 ###fields:
 
+| field | note|
+| --- | --- |
 | rdf:type | all bibo:Document |
-| rdfs:seeAlso | always a URL of this structure: http://www.getty.edu/vow/AATSource?find=&logic=AND&note=&sourceid=[identifier]  |
+| rdfs:seeAlso | always a URL of this structure: http://www.getty.edu/vow/AATSource?find=&logic=AND&note=&sourceid=[identifier] |
 | dcterms:created | date record was created  |
 | dcterms:modified | date record was modified  |
 | skos:changeNote | points to instances of prov:Activity, prov:Create, prov:Modify, http://example.com/base/Create, http://example.com/base/Modify (last two errors?) |
