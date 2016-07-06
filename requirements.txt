@@ -1,0 +1,8 @@
+isodate==0.5.4
+keepalive==0.5
+lxml==3.6.0
+pyparsing==2.1.5
+rdflib==4.2.1
+requests==2.10.0
+six==1.10.0
+SPARQLWrapper==1.7.6
