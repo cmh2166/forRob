@@ -19,6 +19,7 @@ Value additions:
 433752 bibo:Document instances as of 5 July 2016 SPARQL query at vocab.getty.edu/sparql.
 
 ###fields:
+
 | rdf:type | all bibo:Document |
 | rdfs:seeAlso | always a URL of this structure: http://www.getty.edu/vow/AATSource?find=&logic=AND&note=&sourceid=[identifier]  |
 | dcterms:created | date record was created  |
