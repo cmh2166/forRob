@@ -3,16 +3,12 @@
 ##Request
 data/titles.txt.sorted.gz == ULAN titles extracted and sorted by source URI
 
-From eyeballing, they look ... bad. Really bad.
-
-What I want to accomplish is either:
-  a) improve the value to the point where that's > 0
-  b) demonstrate value == 0 and take it out of the LOD representation
+The data could be improved significantly, as at the moment it is not useful to machines, and much of it is not useful to humans either.
 
 Value additions:
   - link to LoC bibs, other?
   - Normalize titles and pull out non-Getty identifiers
-  - do bibo:DocumentParts have any information to use for this? Seems not
+  - do bibo:DocumentParts have any information to use for this? Seems not?
 
 ##Getty bibo:Document information
 
