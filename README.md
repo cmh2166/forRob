@@ -8,11 +8,16 @@ The data could be improved significantly, as at the moment it is not useful to m
 Value additions:
   - link to LoC bibs, other?
   - Normalize titles and pull out non-Getty identifiers
-  - do bibo:DocumentParts have any information to use for this? Seems not?
+  - do bibo:DocumentParts have any information to use for this? Seems not? (has 3 properties at present - dcterms:isSourceOf links to bibo:Document, rdf:type gives bibo:DocumentPart, and bibo:locator gives the page number of place within an item, of some sort?) == bibo:DocumentPart not useful for reconciliation.
 
 ##Getty bibo:Document information
 
-433752 bibo:Document instances as of 5 July 2016 SPARQL query at vocab.getty.edu/sparql.
+- 111,235* bibo:Document instances as of 5 July 2016 SPARQL query at vocab.getty.edu/sparql.
+- AAT: 44,927 instances
+- TGN: 3,567 instances
+- ULAN: 62,741 instances
+
+*updated - previous number was from a query that did not ask for distinct instances.
 
 ###fields:
 
@@ -29,6 +34,6 @@ Value additions:
 | dcterms:license | same as cc:license. Why both? |
 | void:inDataset | http://vocab.getty.edu/dataset/aat	has 44927, http://vocab.getty.edu/dataset/tgn	has 3567, http://vocab.getty.edu/dataset/ulan	has 62741 |
 | bibo:shortTitle | Many are same as dcterms:title. Only 742 titles differ. Some URLs, could pull out for better data? |
-| skos:note | variety of notes. Some identifiers - oclc links, ISBN/ISSNs, other. Unstructured. |
+| skos:note | variety of notes. Some identifiers - OCLC links, ISBN/ISSNs, other. Unstructured. |
 
 ##Match title to LoC bibliographic title

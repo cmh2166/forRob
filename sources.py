@@ -6,16 +6,21 @@ from rdflib.namespace import RDF, DC, SKOS, DCT
 from SPARQLWrapper import SPARQLWrapper, JSON
 
 BIBO = rdflib.Namespace("http://purl.org/ontology/bibo/")
-SRU = "http://lx2.loc.gov:210/lcdb?version=1.1&operation=searchRetrieve&startRecord=1&recordSchema=marcxml"
+SRU = "http://lx2.loc.gov:210/lcdb?version=1.1"
+SRU += "&operation=searchRetrieve&startRecord=1&recordSchema=marcxml"
 issn = "&query=bath.issn="
 isbn = "&query=bath.isbn="
 # really bad matching here
 title = "&query=dc.title="
-ns = {'zs': "http://www.loc.gov/zing/srw/", 'marc': 'http://www.loc.gov/MARC21/slim'}
+ns = {'zs': "http://www.loc.gov/zing/srw/",
+      'marc': 'http://www.loc.gov/MARC21/slim'}
 numrec_xp = '/zs:searchRetrieveResponse/zs:numberOfRecords'
-recID_xp = '/zs:searchRetrieveResponse/zs:records/zs:record/zs:recordData/marc:record/marc:controlfield[@tag="001"]'
-title_xp = '/zs:searchRetrieveResponse/zs:records/zs:record/zs:recordData/marc:record/marc:controlfield[@tag="001"]'
-oclc_re = re.compile(r"http://www.worldcat.org/oclc/[0-9]{9}", re.IGNORECASE)
+recID_xp = '/zs:searchRetrieveResponse/zs:records/zs:record/zs:recordData/'
+recID_xp += 'marc:record/marc:controlfield[@tag="001"]'
+title_xp = '/zs:searchRetrieveResponse/zs:records/zs:record/zs:recordData/'
+title_xp += 'marc:record/marc:controlfield[@tag="001"]'
+oclc_re = re.compile(r"http://www.worldcat.org/oclc/[0-9]{9}")
+
 
 def getDocURIs():
     print("call sparql query")
