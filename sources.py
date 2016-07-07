@@ -22,23 +22,24 @@ title_xp += 'marc:record/marc:controlfield[@tag="001"]'
 oclc_re = re.compile(r"http://www.worldcat.org/oclc/[0-9]{9}")
 
 
-def getDocURIs():
-    print("call sparql query")
+def getData():
     sparql = SPARQLWrapper("http://vocab.getty.edu/sparql")
     sparql.setQuery("""
-        SELECT DISTINCT ?doc
-        WHERE { ?doc a bibo:Document}
+        SELECT ?note ?title ?id ?shortTitle
+        WHERE {
+          ?s a bibo:Document .
+          OPTIONAL { ?s dc:identifier ?id }
+          OPTIONAL { ?s dcterms:title ?title }
+          OPTIONAL { ?s skos:note ?note }
+          OPTIONAL { ?s bibo:shortTitle ?shortTitle }.
+        }
     """)
     sparql.setReturnFormat(JSON)
     results = sparql.query().convert()
-
-    print("parsing results")
     docs = rdflib.Graph()
     for result in results["results"]["bindings"]:
         print("parsing: " + result["doc"]["value"])
         docs.parse(result["doc"]["value"])
-    print("writing to file")
-    docs.serialize("data/docs.nt", format="nt")
 
 
 def matching():
