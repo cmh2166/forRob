@@ -25,33 +25,36 @@ oclc_re = re.compile(r"http://www.worldcat.org/oclc/[0-9]{9}")
 
 
 def getData():
-    """Other methods too slow. Pull needed fields for biboDocs via SPARQL."""
-    sparql = SPARQLWrapper("http://vocab.getty.edu/sparql")
-    sparql.setQuery("""
-        SELECT ?uri ?note ?title ?id ?shortTitle
-        WHERE {
-          ?uri a bibo:Document .
-          OPTIONAL { ?uri dc:identifier ?id }
-          OPTIONAL { ?uri dcterms:title ?title }
-          OPTIONAL { ?uri skos:note ?note }
-          OPTIONAL { ?uri bibo:shortTitle ?shortTitle }.
-        }
-    """)
-    sparql.setReturnFormat(JSON)
-    results = sparql.query().convert()
+    """Other methods incomplete/slow. Pull fields for biboDocs via dumps."""
+    g = rdflib.Graph().parse("data/ULANOut_Full.nt", format="nt")
+
+    result = g.query(
+        """PREFIX bibo: <http://purl.org/ontology/bibo/>
+        PREFIX dc: <http://purl.org/dc/elements/1.1/>
+        PREFIX dcterms: <http://purl.org/dc/terms/>
+        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        SELECT DISTINCT ?uri ?id ?title ?note ?shortTitle
+            WHERE {
+              ?uri a bibo:Document .
+              OPTIONAL { ?uri dc:identifier ?id }
+              OPTIONAL { ?uri dcterms:title ?title }
+              OPTIONAL { ?uri skos:note ?note }
+              OPTIONAL { ?uri bibo:shortTitle ?shortTitle }.
+            }
+        """)
     data = {}
-    for result in results["results"]["bindings"]:
+    for row in result:
         uri = title = gettyID = shortTitle = note = ''
-        if 'uri' in result:
-            uri = result['uri']['value']
-        if 'note' in result:
-            note = result['note']['value']
-        if 'title' in result:
-            title = result['title']['value']
-        if 'id' in result:
-            gettyID = result['id']['value']
-        if 'shortTitle' in result:
-            shortTitle = result['shortTitle']['value']
+        if row['uri']:
+            uri = row['uri'].toPython()
+        if row['note']:
+            note = row['note'].toPython()
+        if row['title']:
+            title = row['title'].toPython()
+        if row['id']:
+            gettyID = row['id'].toPython()
+        if row['shortTitle']:
+            shortTitle = row['shortTitle'].toPython()
         if uri not in data:
             data[uri] = {}
             data[uri]['note'] = [note]
@@ -75,7 +78,7 @@ def getData():
                 data[uri]['shortTitle'].append(shortTitle)
             else:
                 data[uri]['shortTitle'] = [shortTitle]
-    with open('data/output.json', 'w') as fh:
+    with open('data/ulan.json', 'w') as fh:
         json.dump(data, fh)
 
 
