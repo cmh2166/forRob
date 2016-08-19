@@ -4,6 +4,7 @@ import json
 
 BIBO = rdflib.Namespace("http://purl.org/ontology/bibo/")
 
+
 def getData():
     """Other methods incomplete/slow. Pull fields for biboDocs via dumps."""
     g = rdflib.Graph().parse("data/ULANOut_Full.nt", format="nt")
@@ -64,7 +65,7 @@ def getData():
 
 
 def main():
-#    getData()
+    """Grabbing AAT, TGN, ULAN bibo:Documents, ignoring bibo:DocumentParts."""
     with open('data/docs.json', 'r') as fh:
         data = json.load(fh)
     parseData(data)
