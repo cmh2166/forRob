@@ -25,8 +25,8 @@ def grabGraph(URIs):
     data = rdflib.Graph().parse("data/data.nt", format="nt")
     num = len(URIs)
     print("Grabbing fresh data.")
-    n = 55000
-    for URI in URIs[55000:]:
+    n = 64300
+    for URI in URIs[64300:]:
         n += 1
         print(n, num)
         try:
