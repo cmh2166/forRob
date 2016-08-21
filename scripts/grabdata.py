@@ -1,74 +1,48 @@
-"""Stored methods for ease of access."""
+"""Second attempt at better handling of grabbing data."""
+import requests
 import rdflib
-import json
+import xml
+GettySPARQL = "http://vocab.getty.edu/sparql.json?query=SELECT+DISTINCT+%3Fdoc\
+               %0D%0AWHERE+%7B%0D%0A++%3Fdoc+a+bibo%3ADocument+.%0D%0A%7D\
+               &_implicit=false&_equivalent=false&_form=%2Fsparql"
 
-BIBO = rdflib.Namespace("http://purl.org/ontology/bibo/")
 
-
-def getData():
+def getURIs():
     """Other methods incomplete/slow. Pull fields for biboDocs via dumps."""
-    g = rdflib.Graph().parse("data/ULANOut_Full.nt", format="nt")
+    URIs = []
+    results = requests.get(GettySPARQL).json()
 
-    result = g.query(
-        """PREFIX bibo: <http://purl.org/ontology/bibo/>
-        PREFIX dc: <http://purl.org/dc/elements/1.1/>
-        PREFIX dcterms: <http://purl.org/dc/terms/>
-        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-        SELECT DISTINCT ?uri ?id ?title ?note ?shortTitle
-            WHERE {
-              ?uri a bibo:Document .
-              OPTIONAL { ?uri dc:identifier ?id }
-              OPTIONAL { ?uri dcterms:title ?title }
-              OPTIONAL { ?uri skos:note ?note }
-              OPTIONAL { ?uri bibo:shortTitle ?shortTitle }.
-            }
-        """)
-    data = {}
-    for row in result:
-        uri = title = gettyID = shortTitle = note = ''
-        if row['uri']:
-            uri = row['uri'].toPython()
-        if row['note']:
-            note = row['note'].toPython()
-        if row['title']:
-            title = row['title'].toPython()
-        if row['id']:
-            gettyID = row['id'].toPython()
-        if row['shortTitle']:
-            shortTitle = row['shortTitle'].toPython()
-        if uri not in data:
-            data[uri] = {}
-            data[uri]['note'] = [note]
-            data[uri]['title'] = [title]
-            data[uri]['id'] = [gettyID]
-            data[uri]['shortTitle'] = [shortTitle]
-        else:
-            if 'note' in data[uri]:
-                data[uri]['note'].append(note)
-            else:
-                data[uri]['note'] = [note]
-            if 'title' in data[uri]:
-                data[uri]['title'].append(title)
-            else:
-                data[uri]['title'] = [title]
-            if 'id' in data[uri]:
-                data[uri]['id'].append(gettyID)
-            else:
-                data[uri]['id'] = [gettyID]
-            if 'shortTitle' in data[uri]:
-                data[uri]['shortTitle'].append(shortTitle)
-            else:
-                data[uri]['shortTitle'] = [shortTitle]
-    with open('data/ulan.json', 'w') as fh:
-        json.dump(data, fh)
+    if len(results["results"]["bindings"]) != 111467:
+        print('Error with Getty SPARQL Endpoint Return.')
+    else:
+        for result in results["results"]["bindings"]:
+            URIs.append(result["doc"]["value"])
+    return(URIs)
+
+
+def grabGraph(URIs):
+    """Get graph for each URI, save to file."""
+    data = rdflib.Graph().parse("data/data.nt", format="nt")
+    num = len(URIs)
+    print("Grabbing fresh data.")
+    n = 55000
+    for URI in URIs[55000:]:
+        n += 1
+        print(n, num)
+        try:
+            data.parse(URI)
+        except xml.sax._exceptions.SAXParseException:
+            print("Error: " + URI)
+        if n % 100 == 0:
+            data.serialize(destination='data/data.nt', format='nt')
+    data.serialize(destination='data/data.nt', format='nt')
     return(data)
 
 
 def main():
     """Grabbing AAT, TGN, ULAN bibo:Documents, ignoring bibo:DocumentParts."""
-    with open('data/docs.json', 'r') as fh:
-        data = json.load(fh)
-    parseData(data)
+    URIs = getURIs()
+    grabGraph(URIs)
 
 if __name__ == '__main__':
     main()

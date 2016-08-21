@@ -20,18 +20,6 @@ marcisbn_xp = "//marc:datafield[@tag='245']/marc:subfield[@code='a']"
 LCCN = "https://lccn.loc.gov/{0}/mads"
 madsname_xp = "/mads:mads/mads:authority/mads:name/mads:namePart"
 madslccn_xp = "/mads:mads/mads:identity[not(@invalid)]"
-# LoC SRU
-LCSRU = "http://lx2.loc.gov:210/lcdb?version=1.1"
-LCSRU += "&operation=searchRetrieve&startRecord=1&recordSchema=marcxml"
-issn_q = "&query=bath.issn="
-isbn_q = "&query=bath.isbn="
-title_q = "&query=dc.title="
-# LoC SRU XML Parsing
-numrec_xp = '/zs:searchRetrieveResponse/zs:numberOfRecords'
-recID_xp = '/zs:searchRetrieveResponse/zs:records/zs:record/zs:recordData/'
-recID_xp += 'marc:record/marc:controlfield[@tag="001"]'
-title_xp = '/zs:searchRetrieveResponse/zs:records/zs:record/zs:recordData/'
-title_xp += 'marc:record/marc:controlfield[@tag="001"]'
 # OCLC ISBN Lookup
 isbnx = 'http://xisbn.worldcat.org/webservices/xid/isbn/{0}'
 isbnx += '?method=getMetadata&format=json&fl=*'
@@ -193,10 +181,6 @@ def main():
         for key in data.keys():
             keys.add(key)
     print(keys)
-#    newdata = matchingISBN(data)
-#    if data != newdata and newdata:
-#        with open('data/docs.json', 'w') as fh:
-#            json.dump(newdata, fh)
 
 
 if __name__ == '__main__':
